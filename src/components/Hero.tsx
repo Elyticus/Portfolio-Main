@@ -1,12 +1,28 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { ArrowRight, Download } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { Theme } from "@/hooks/useTheme";
+
+const HeroHologram = lazy(() => import("@/components/HeroHologram"));
 
 const RESUME_URL =
   "https://drive.google.com/file/d/1KMkyIFdmHdqd2XWRReHLSXrRmG5I42oS/view?usp=sharing";
 
-export default function Hero() {
+function PhotoFallback() {
+  return (
+    <img
+      src="/profile.webp"
+      alt="Portrait of Catalin Pirvulescu"
+      width={640}
+      height={640}
+      fetchPriority="high"
+      className="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full object-cover object-top border border-border shadow-xl"
+    />
+  );
+}
+
+export default function Hero({ theme }: { theme: Theme }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -75,18 +91,15 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ── Right: profile photo ── */}
+          {/* ── Right: holographic portrait ── */}
           <div className="shrink-0 flex justify-center">
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-primary/15 blur-3xl scale-110 pointer-events-none" />
-              <img
-                src="/profile.webp"
-                alt="Portrait of Catalin Pirvulescu"
-                width={640}
-                height={640}
-                fetchPriority="high"
-                className="relative w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full object-cover object-top border border-border shadow-xl"
-              />
+              <div className="relative">
+                <Suspense fallback={<PhotoFallback />}>
+                  <HeroHologram theme={theme} />
+                </Suspense>
+              </div>
             </div>
           </div>
         </div>
