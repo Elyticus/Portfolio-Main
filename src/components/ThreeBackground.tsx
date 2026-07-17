@@ -2,14 +2,16 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import type { Theme } from '@/hooks/useTheme'
 
-const PARTICLE_COUNT = 120
 const CONNECTION_DISTANCE = 150
 const MOUSE_FORCE_RADIUS = 100
+const FRAME_INTERVAL = 1000 / 30 // ambient background does not need 60fps
+// Empirically lines stay far below n²; a small cap keeps the buffers tiny
+const MAX_LINES_PER_PARTICLE = 8
 
-// De-neoned brand colors; light theme needs darker, quieter particles to read on white
+// De-neoned brand colors; light theme needs darker, much quieter particles
 const PALETTE = {
-  dark: { particle: 0x3fd6a3, lineA: 0x3fd6a3, lineB: 0x4aa8d8, opacity: 0.6 },
-  light: { particle: 0x0f766e, lineA: 0x0f766e, lineB: 0x1d6f94, opacity: 0.3 },
+  dark: { particle: 0x3fd6a3, lineA: 0x3fd6a3, lineB: 0x4aa8d8, particleOpacity: 0.6, lineOpacity: 0.35 },
+  light: { particle: 0x0f766e, lineA: 0x0f766e, lineB: 0x1d6f94, particleOpacity: 0.3, lineOpacity: 0.12 },
 }
 
 export default function ThreeBackground({ theme }: { theme: Theme }) {
@@ -19,8 +21,14 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
     const mount = mountRef.current
     if (!mount) return
 
+    // Motion-sensitive users get the static CSS glow only
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const isMobile = window.innerWidth < 768
+    const particleCount = isMobile ? 50 : 100
+
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    renderer.setPixelRatio(window.devicePixelRatio)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setClearColor(0x000000, 0)
     mount.appendChild(renderer.domElement)
@@ -30,11 +38,11 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
     camera.position.z = 400
 
     // Particles
-    const positions = new Float32Array(PARTICLE_COUNT * 3)
+    const positions = new Float32Array(particleCount * 3)
     const velocities: THREE.Vector3[] = []
     const originalPositions: THREE.Vector3[] = []
 
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    for (let i = 0; i < particleCount; i++) {
       const x = (Math.random() - 0.5) * window.innerWidth * 0.9
       const y = (Math.random() - 0.5) * window.innerHeight * 0.9
       const z = (Math.random() - 0.5) * 200
@@ -61,35 +69,35 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
       color: palette.particle,
       size: 3,
       transparent: true,
-      opacity: palette.opacity,
+      opacity: palette.particleOpacity,
       sizeAttenuation: false,
     })
 
     const particles = new THREE.Points(geometry, material)
     scene.add(particles)
 
-    // Lines geometry (max connections)
-    const maxLines = PARTICLE_COUNT * PARTICLE_COUNT
+    // Lines geometry
+    const maxLines = particleCount * MAX_LINES_PER_PARTICLE
     const linePositions = new Float32Array(maxLines * 6)
     const lineColors = new Float32Array(maxLines * 6)
     const lineGeometry = new THREE.BufferGeometry()
     lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3))
     lineGeometry.setAttribute('color', new THREE.BufferAttribute(lineColors, 3))
 
-    const lineMaterial = new THREE.LineSegments(
+    const lines = new THREE.LineSegments(
       lineGeometry,
-      new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.4 })
+      new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: palette.lineOpacity })
     )
-    scene.add(lineMaterial)
+    scene.add(lines)
 
-    // Mouse tracking in 3D
+    // Mouse tracking in 3D (desktop only — no pointer to chase on touch)
     const mouse3D = new THREE.Vector3(9999, 9999, 0)
 
     const onMouseMove = (e: MouseEvent) => {
       mouse3D.x = (e.clientX - window.innerWidth / 2)
       mouse3D.y = -(e.clientY - window.innerHeight / 2)
     }
-    window.addEventListener('mousemove', onMouseMove)
+    if (!isMobile) window.addEventListener('mousemove', onMouseMove)
 
     const onResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight
@@ -98,17 +106,20 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
     }
     window.addEventListener('resize', onResize)
 
-    let animId: number
+    let animId = 0
+    let lastFrame = 0
     const pos = geometry.attributes.position as THREE.BufferAttribute
 
     const colorA = new THREE.Color(palette.lineA)
     const colorB = new THREE.Color(palette.lineB)
 
-    const animate = () => {
+    const animate = (now: number) => {
       animId = requestAnimationFrame(animate)
+      if (now - lastFrame < FRAME_INTERVAL) return
+      lastFrame = now
 
       // Update particle positions
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
+      for (let i = 0; i < particleCount; i++) {
         const ix = i * 3
         let x = pos.array[ix] as number
         let y = pos.array[ix + 1] as number
@@ -142,8 +153,8 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
 
       // Draw connection lines
       let lineIdx = 0
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        for (let j = i + 1; j < PARTICLE_COUNT; j++) {
+      outer: for (let i = 0; i < particleCount; i++) {
+        for (let j = i + 1; j < particleCount; j++) {
           const ax = pos.array[i * 3] as number
           const ay = pos.array[i * 3 + 1] as number
           const bx = pos.array[j * 3] as number
@@ -151,6 +162,7 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
           const d = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2)
 
           if (d < CONNECTION_DISTANCE) {
+            if (lineIdx >= maxLines) break outer
             const alpha = 1 - d / CONNECTION_DISTANCE
             const mixedColor = colorA.clone().lerp(colorB, d / CONNECTION_DISTANCE)
 
@@ -180,17 +192,34 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
       renderer.render(scene, camera)
     }
 
-    animate()
+    const start = () => {
+      if (!animId) animId = requestAnimationFrame(animate)
+    }
+    const stop = () => {
+      cancelAnimationFrame(animId)
+      animId = 0
+    }
+
+    // Don't burn CPU while the tab is hidden
+    const onVisibility = () => {
+      if (document.hidden) stop()
+      else start()
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+
+    start()
 
     return () => {
-      cancelAnimationFrame(animId)
-      window.removeEventListener('mousemove', onMouseMove)
+      stop()
+      document.removeEventListener('visibilitychange', onVisibility)
+      if (!isMobile) window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('resize', onResize)
       mount.removeChild(renderer.domElement)
       renderer.dispose()
       geometry.dispose()
       lineGeometry.dispose()
       material.dispose()
+      lines.material.dispose()
     }
   }, [theme])
 

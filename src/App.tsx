@@ -1,4 +1,4 @@
-import ThreeBackground from '@/components/ThreeBackground'
+import { lazy, Suspense } from 'react'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import Projects from '@/components/Projects'
@@ -6,6 +6,9 @@ import About from '@/components/About'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import { useTheme } from '@/hooks/useTheme'
+
+// three.js is by far the heaviest dependency — keep it out of the initial bundle
+const ThreeBackground = lazy(() => import('@/components/ThreeBackground'))
 
 export default function App() {
   const { theme, toggle } = useTheme()
@@ -18,7 +21,9 @@ export default function App() {
       >
         Skip to content
       </a>
-      <ThreeBackground theme={theme} />
+      <Suspense fallback={null}>
+        <ThreeBackground theme={theme} />
+      </Suspense>
       <div className="relative z-10">
         <Navbar theme={theme} onToggleTheme={toggle} />
         <main id="main">
