@@ -37,56 +37,55 @@ export default function Navbar({ theme, onToggleTheme }: NavbarProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollTo = (href: string) => {
-    const id = href.slice(1);
-    const el = document.getElementById(id);
-    if (el) {
-      window.scrollTo({ top: el.offsetTop - 72, behavior: "smooth" });
-    }
-    setOpen(false);
-  };
+  const linkClass = (href: string) =>
+    `relative text-sm font-medium transition-colors duration-200 group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+      active === href.slice(1)
+        ? "text-primary"
+        : "text-muted-foreground hover:text-foreground"
+    }`;
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#030712]/80 backdrop-blur-xl border-b border-[#00f5a0]/10 shadow-lg shadow-[#00f5a0]/5"
+          ? "bg-background/80 backdrop-blur-xl border-b border-border shadow-sm"
           : ""
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <span className="text-xl font-bold gradient-text tracking-wider">
+        <a href="#home" className="text-xl font-bold text-gradient tracking-wider rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           {"<Catalin />"}
-        </span>
+        </a>
 
         {/* Desktop links */}
-        <ul className="hidden md:flex gap-8">
+        <ul className="hidden md:flex items-center gap-8">
           {links.map(({ href, label }) => (
             <li key={href}>
-              <button
-                onClick={() => scrollTo(href)}
-                className={`relative text-sm font-medium transition-colors duration-200 group ${
-                  active === href.slice(1)
-                    ? "text-[#00f5a0]"
-                    : "text-gray-400 hover:text-white"
-                }`}
+              <a
+                href={href}
+                aria-current={active === href.slice(1) ? "true" : undefined}
+                className={linkClass(href)}
               >
                 {label}
                 <span
-                  className={`absolute -bottom-1 left-0 h-px bg-linear-to-r from-[#00f5a0] to-[#00d9f5] transition-all duration-300 ${active === href.slice(1) ? "w-full" : "w-0 group-hover:w-full"}`}
+                  className={`absolute -bottom-1 left-0 h-px bg-primary transition-all duration-300 ${
+                    active === href.slice(1) ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
                 />
-              </button>
+              </a>
             </li>
           ))}
         </ul>
 
         <div className="flex items-center gap-1">
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-          {/* Mobile toggle */}
+          {/* Mobile menu button */}
           <button
             onClick={() => setOpen((o) => !o)}
-            className="md:hidden text-gray-400 hover:text-white transition-colors"
+            className="md:hidden inline-flex items-center justify-center size-8 rounded-lg text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="Toggle menu"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
           >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -95,19 +94,26 @@ export default function Navbar({ theme, onToggleTheme }: NavbarProps) {
 
       {/* Mobile menu */}
       <div
+        id="mobile-menu"
         className={`md:hidden overflow-hidden transition-all duration-300 ${
           open ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-        } bg-[#030712]/95 backdrop-blur-xl border-b border-[#00f5a0]/10`}
+        } bg-background/95 backdrop-blur-xl border-b border-border`}
       >
         <ul className="px-6 py-4 flex flex-col gap-4">
           {links.map(({ href, label }) => (
             <li key={href}>
-              <button
-                onClick={() => scrollTo(href)}
-                className="text-gray-300 hover:text-[#00f5a0] transition-colors text-sm font-medium"
+              <a
+                href={href}
+                onClick={() => setOpen(false)}
+                aria-current={active === href.slice(1) ? "true" : undefined}
+                className={`text-sm font-medium transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  active === href.slice(1)
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
                 {label}
-              </button>
+              </a>
             </li>
           ))}
         </ul>

@@ -1,14 +1,20 @@
-import { useEffect, useRef, useState } from "react";
-import { Download, Code2, Palette, Zap } from "lucide-react";
+import { Download, Code2, Palette, Zap, ArrowDown } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useInView } from "@/hooks/useInView";
+
+const RESUME_URL =
+  "https://drive.google.com/file/d/1KMkyIFdmHdqd2XWRReHLSXrRmG5I42oS/view?usp=sharing";
 
 const skills = [
-  { name: "HTML", color: "#e34f26" },
-  { name: "CSS", color: "#264de4" },
-  { name: "JavaScript", color: "#f7df1e" },
-  { name: "React", color: "#61dafb" },
-  { name: "Bootstrap", color: "#7952b3" },
-  { name: "Firebase", color: "#ffca28" },
-  { name: "API", color: "#31a8ff" },
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Bootstrap",
+  "Firebase",
+  "REST APIs",
 ];
 
 const highlights = [
@@ -29,135 +35,150 @@ const highlights = [
   },
 ];
 
-export default function About() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+const timeline = [
+  {
+    period: "Now",
+    title: "Open to frontend opportunities",
+    desc: "Actively looking for a frontend role where I can keep growing and ship polished user interfaces.",
+  },
+  {
+    period: "Completed",
+    title: "Scrimba — Frontend Developer Career Path",
+    desc: "Project-based training covering modern JavaScript, React and responsive design.",
+  },
+  {
+    period: "Graduate",
+    title: "IT School",
+    desc: "Foundation in web development fundamentals: HTML, CSS and JavaScript.",
+  },
+];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.2 },
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+export default function About() {
+  const [headerRef, headerVisible] = useInView<HTMLDivElement>(0.2);
+  const [gridRef, gridVisible] = useInView<HTMLDivElement>(0.15);
 
   return (
-    <section id="about" className="py-32 relative">
-      {/* Subtle glow */}
-      <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#00f5a0]/2 to-transparent pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="about" className="py-32 relative scroll-mt-20">
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Header + bio */}
         <div
-          ref={sectionRef}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+          ref={headerRef}
+          className="transition-all duration-700"
+          style={{
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? "translateY(0)" : "translateY(24px)",
+          }}
         >
-          {/* Left — image + highlights */}
-          <div
-            className="transition-all duration-700"
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(-40px)",
-            }}
-          >
-            <div className="relative">
-              {/* Glow frame */}
-              <div className="absolute -inset-1 rounded-2xl bg-linear-to-br from-[#00f5a0]/30 to-[#00d9f5]/20 blur-xl" />
-              <div className="relative rounded-2xl overflow-hidden border border-[#00f5a0]/20">
-                <img
-                  src="https://images.unsplash.com/photo-1607705703571-c5a8695f18f6?w=700&auto=format&fit=crop&q=80"
-                  alt="Developer at work"
-                  className="w-full h-80 object-cover"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-[#030712]/80 to-transparent" />
-              </div>
-            </div>
-
-            {/* Highlight cards */}
-            <div className="grid grid-cols-3 gap-3 mt-6">
-              {highlights.map(({ icon: Icon, label, desc }) => (
-                <div
-                  key={label}
-                  className="flex flex-col items-center text-center p-4 rounded-xl border border-white/5 bg-white/2 hover:border-[#00f5a0]/30 hover:bg-[#00f5a0]/5 transition-all duration-300 group"
-                >
-                  <Icon
-                    size={20}
-                    className="text-[#00f5a0] mb-2 group-hover:scale-110 transition-transform"
-                  />
-                  <span className="text-white text-xs font-semibold">
-                    {label}
-                  </span>
-                  <span className="text-gray-500 text-[10px] mt-0.5">
-                    {desc}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="text-center mb-10">
+            <p className="text-primary text-sm font-medium tracking-widest uppercase mb-3">
+              About
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+              A bit about me
+            </h2>
           </div>
 
-          {/* Right — bio + skills */}
-          <div
-            className="transition-all duration-700 delay-200"
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(40px)",
-            }}
-          >
-            <p className="text-[#00f5a0] text-sm font-mono tracking-widest uppercase mb-3">
-              // about me
-            </p>
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-6">
-              About <span className="gradient-text">Me</span>
-            </h2>
-
-            <p className="text-gray-400 leading-relaxed mb-4">
+          <div className="max-w-3xl mx-auto space-y-4 mb-12">
+            <p className="text-muted-foreground leading-relaxed">
               I graduated IT School and completed the Scrimba Front End
               Developer Career Path. I'm a self-taught learner with a passion
-              for pushing the boundaries of the web. Digital art captivates me,
-              and I aspire to excel in web development and find the sweet spot
-              of technology.
+              for building for the web — digital art captivates me, and I love
+              finding the sweet spot between design and technology.
             </p>
-            <p className="text-gray-400 leading-relaxed mb-8">
-              I specialise in modern web technologies and love working on
-              projects that challenge me to learn and grow. When I'm not coding,
-              you can find me reading or experimenting with new recipes in the
-              kitchen.
+            <p className="text-muted-foreground leading-relaxed">
+              I specialise in modern web technologies and enjoy projects that
+              challenge me to learn and grow. When I'm not coding, you can find
+              me reading or experimenting with new recipes in the kitchen.
             </p>
+          </div>
 
-            {/* Skills */}
-            <div className="mb-8">
-              <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                <span className="w-4 h-px bg-[#00f5a0]" />
-                Technical Skills
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <span
-                    key={skill.name}
-                    className="px-3 py-1.5 rounded-lg text-sm font-medium border transition-all duration-300 hover:scale-105"
-                    style={{
-                      color: skill.color,
-                      borderColor: `${skill.color}40`,
-                      background: `${skill.color}10`,
-                    }}
-                  >
-                    {skill.name}
-                  </span>
-                ))}
+          {/* Highlights */}
+          <div className="grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto mb-16">
+            {highlights.map(({ icon: Icon, label, desc }) => (
+              <div
+                key={label}
+                className="flex flex-col items-center text-center p-4 rounded-xl border border-border bg-card"
+              >
+                <Icon size={20} className="text-primary mb-2" />
+                <span className="text-sm font-semibold">{label}</span>
+                <span className="text-muted-foreground text-xs mt-0.5">
+                  {desc}
+                </span>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
 
-            <a
-              href="https://drive.google.com/file/d/1KMkyIFdmHdqd2XWRReHLSXrRmG5I42oS/view?usp=sharing"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-linear-to-r from-[#00f5a0] to-[#00d9f5] text-gray-900 font-semibold hover:opacity-90 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(0,245,160,0.4)]"
-            >
-              <Download size={18} />
-              Download Resume
-            </a>
+        {/* Experience + skills */}
+        <div
+          ref={gridRef}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-16 transition-all duration-700"
+          style={{
+            opacity: gridVisible ? 1 : 0,
+            transform: gridVisible ? "translateY(0)" : "translateY(24px)",
+          }}
+        >
+          <div>
+            <h3 className="font-semibold text-lg mb-6 flex items-center gap-2">
+              <span className="w-4 h-px bg-primary" />
+              Education &amp; Experience
+            </h3>
+            <ol className="relative border-l border-border pl-6 space-y-8">
+              {timeline.map(({ period, title, desc }) => (
+                <li key={title} className="relative">
+                  <span className="absolute -left-[30.5px] top-1.5 size-2.5 rounded-full bg-primary" />
+                  <p className="text-xs font-medium uppercase tracking-wider text-primary mb-1">
+                    {period}
+                  </p>
+                  <h4 className="font-semibold">{title}</h4>
+                  <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                    {desc}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-lg mb-6 flex items-center gap-2">
+              <span className="w-4 h-px bg-primary" />
+              Technical Skills
+            </h3>
+            <ul className="flex flex-wrap gap-2 mb-10">
+              {skills.map((skill) => (
+                <li
+                  key={skill}
+                  className="inline-flex items-center rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium"
+                >
+                  {skill}
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-wrap gap-4">
+              <a
+                href={RESUME_URL}
+                target="_blank"
+                rel="noreferrer"
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "h-11 px-6 text-base",
+                )}
+              >
+                <Download size={18} />
+                Download resume
+              </a>
+              <a
+                href="#contact"
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "h-11 px-6 text-base",
+                )}
+              >
+                <ArrowDown size={18} />
+                Get in touch
+              </a>
+            </div>
           </div>
         </div>
       </div>
