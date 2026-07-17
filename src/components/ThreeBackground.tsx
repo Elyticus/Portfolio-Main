@@ -1,11 +1,18 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import type { Theme } from '@/hooks/useTheme'
 
 const PARTICLE_COUNT = 120
 const CONNECTION_DISTANCE = 150
 const MOUSE_FORCE_RADIUS = 100
 
-export default function ThreeBackground() {
+// De-neoned brand colors; light theme needs darker, quieter particles to read on white
+const PALETTE = {
+  dark: { particle: 0x3fd6a3, lineA: 0x3fd6a3, lineB: 0x4aa8d8, opacity: 0.6 },
+  light: { particle: 0x0f766e, lineA: 0x0f766e, lineB: 0x1d6f94, opacity: 0.3 },
+}
+
+export default function ThreeBackground({ theme }: { theme: Theme }) {
   const mountRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -49,11 +56,12 @@ export default function ThreeBackground() {
     const geometry = new THREE.BufferGeometry()
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
 
+    const palette = PALETTE[theme]
     const material = new THREE.PointsMaterial({
-      color: 0x00f5a0,
+      color: palette.particle,
       size: 3,
       transparent: true,
-      opacity: 0.8,
+      opacity: palette.opacity,
       sizeAttenuation: false,
     })
 
@@ -93,8 +101,8 @@ export default function ThreeBackground() {
     let animId: number
     const pos = geometry.attributes.position as THREE.BufferAttribute
 
-    const colorA = new THREE.Color(0x00f5a0)
-    const colorB = new THREE.Color(0x00d9f5)
+    const colorA = new THREE.Color(palette.lineA)
+    const colorB = new THREE.Color(palette.lineB)
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
@@ -184,7 +192,7 @@ export default function ThreeBackground() {
       lineGeometry.dispose()
       material.dispose()
     }
-  }, [])
+  }, [theme])
 
   return (
     <div

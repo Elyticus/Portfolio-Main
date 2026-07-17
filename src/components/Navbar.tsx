@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
+import type { Theme } from "@/hooks/useTheme";
 
 const links = [
   { href: "#home", label: "Home" },
@@ -8,7 +10,12 @@ const links = [
   { href: "#contact", label: "Contact" },
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+  theme: Theme;
+  onToggleTheme: () => void;
+}
+
+export default function Navbar({ theme, onToggleTheme }: NavbarProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("home");
@@ -73,14 +80,17 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setOpen((o) => !o)}
-          className="md:hidden text-gray-400 hover:text-white transition-colors"
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setOpen((o) => !o)}
+            className="md:hidden text-gray-400 hover:text-white transition-colors"
+            aria-label="Toggle menu"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
