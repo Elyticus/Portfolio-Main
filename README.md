@@ -10,7 +10,7 @@ Personal portfolio and digital resume of **Catalin Pirvulescu**, frontend develo
 
 - **Light & dark theme** — token-driven design system (Tailwind CSS v4 + shadcn oklch tokens), dark by default, the toggle persists the choice, and a pre-paint script prevents any flash of the wrong theme
 - **Accessible** — WCAG AA contrast in both themes, skip-to-content link, `aria-current` navigation, visible focus rings, semantic headings
-- **Motion-safe** — reveal and hover animations respect `prefers-reduced-motion`; the WebGL particle background renders a static frame instead of animating
+- **Motion-safe** — reveal and hover animations respect `prefers-reduced-motion`
 - **Fast** — three.js is code-split out of the initial bundle (~80 KB gzipped JS on first load), the particle background pauses on hidden tabs and slims down on mobile; images are optimized WebP with explicit dimensions (no layout shift)
 - **SEO-ready** — full meta description, Open Graph / Twitter card tags and a generated social preview image
 

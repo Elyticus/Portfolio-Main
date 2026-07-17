@@ -7,10 +7,11 @@ const MOUSE_FORCE_RADIUS = 100
 // Empirically lines stay far below n²; a small cap keeps the buffers tiny
 const MAX_LINES_PER_PARTICLE = 8
 
-// De-neoned brand colors; light theme needs darker, quieter particles
+// Same animation in both themes; only the colors adapt so the particles
+// stay visible on each background (darker teal on the light theme)
 const PALETTE = {
   dark: { particle: 0x3fd6a3, lineA: 0x3fd6a3, lineB: 0x4aa8d8, particleOpacity: 0.8, lineOpacity: 0.4 },
-  light: { particle: 0x0f766e, lineA: 0x0f766e, lineB: 0x1d6f94, particleOpacity: 0.45, lineOpacity: 0.2 },
+  light: { particle: 0x0f766e, lineA: 0x0f766e, lineB: 0x1d6f94, particleOpacity: 0.8, lineOpacity: 0.4 },
 }
 
 export default function ThreeBackground({ theme }: { theme: Theme }) {
@@ -20,11 +21,7 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
     const mount = mountRef.current
     if (!mount) return
 
-    // Motion-sensitive users get a single static frame instead of animation
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    const isMobile = window.innerWidth < 768
-    const particleCount = isMobile ? 60 : 120
+    const particleCount = 120
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -96,7 +93,7 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
       mouse3D.x = (e.clientX - window.innerWidth / 2)
       mouse3D.y = -(e.clientY - window.innerHeight / 2)
     }
-    if (!isMobile) window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mousemove', onMouseMove)
 
     const onResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight
@@ -204,18 +201,14 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
       if (document.hidden) stop()
       else start()
     }
+    document.addEventListener('visibilitychange', onVisibility)
 
-    if (reducedMotion) {
-      renderFrame() // one static frame, no loop
-    } else {
-      document.addEventListener('visibilitychange', onVisibility)
-      start()
-    }
+    start()
 
     return () => {
       stop()
       document.removeEventListener('visibilitychange', onVisibility)
-      if (!isMobile) window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('resize', onResize)
       mount.removeChild(renderer.domElement)
       renderer.dispose()
