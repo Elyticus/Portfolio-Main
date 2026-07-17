@@ -1,73 +1,43 @@
-# React + TypeScript + Vite
+# Catalin Pirvulescu — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio and digital resume of **Catalin Pirvulescu**, frontend developer.
 
-Currently, two official plugins are available:
+![Portfolio preview](docs/preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Light & dark theme** — token-driven design system (Tailwind CSS v4 + shadcn oklch tokens), initial theme follows the OS preference, the toggle persists the choice, and a pre-paint script prevents any flash of the wrong theme
+- **Accessible** — WCAG AA contrast in both themes, skip-to-content link, `aria-current` navigation, visible focus rings, semantic headings
+- **Motion-safe** — every animation (reveal-on-scroll, hover effects, the WebGL particle background) respects `prefers-reduced-motion`
+- **Fast** — three.js is code-split out of the initial bundle (~80 KB gzipped JS on first load), the particle background runs at a 30fps cap, pauses on hidden tabs and slims down on mobile; images are optimized WebP with explicit dimensions (no layout shift)
+- **SEO-ready** — full meta description, Open Graph / Twitter card tags and a generated social preview image
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the ESLint configuration
+React 19 · TypeScript · Vite · Tailwind CSS v4 · shadcn/ui (Base UI) · three.js · Geist
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Development
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev       # start the dev server
+npm run build     # type-check and build for production
+npm run preview   # serve the production build
+npm run lint      # run eslint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project screenshots
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Project cards use images from `src/assets/projects/`. To replace the branded
+placeholder cards with real screenshots of the live sites, run:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run capture
 ```
+
+The script visits each live project with headless Chromium, saves optimized
+960×540 WebP screenshots, regenerates the optimized profile photo and the
+`public/og.jpg` social card. Re-run it whenever a project's UI changes.
+
+> After deploying, update the `og:url` / `og:image` domain placeholder in
+> `index.html` with the real deploy URL.
