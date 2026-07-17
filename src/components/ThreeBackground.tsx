@@ -4,14 +4,13 @@ import type { Theme } from '@/hooks/useTheme'
 
 const CONNECTION_DISTANCE = 150
 const MOUSE_FORCE_RADIUS = 100
-const FRAME_INTERVAL = 1000 / 30 // ambient background does not need 60fps
 // Empirically lines stay far below n²; a small cap keeps the buffers tiny
 const MAX_LINES_PER_PARTICLE = 8
 
-// De-neoned brand colors; light theme needs darker, much quieter particles
+// De-neoned brand colors; light theme needs darker, quieter particles
 const PALETTE = {
-  dark: { particle: 0x3fd6a3, lineA: 0x3fd6a3, lineB: 0x4aa8d8, particleOpacity: 0.6, lineOpacity: 0.35 },
-  light: { particle: 0x0f766e, lineA: 0x0f766e, lineB: 0x1d6f94, particleOpacity: 0.3, lineOpacity: 0.12 },
+  dark: { particle: 0x3fd6a3, lineA: 0x3fd6a3, lineB: 0x4aa8d8, particleOpacity: 0.8, lineOpacity: 0.4 },
+  light: { particle: 0x0f766e, lineA: 0x0f766e, lineB: 0x1d6f94, particleOpacity: 0.45, lineOpacity: 0.2 },
 }
 
 export default function ThreeBackground({ theme }: { theme: Theme }) {
@@ -21,11 +20,11 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
     const mount = mountRef.current
     if (!mount) return
 
-    // Motion-sensitive users get the static CSS glow only
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // Motion-sensitive users get a single static frame instead of animation
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     const isMobile = window.innerWidth < 768
-    const particleCount = isMobile ? 50 : 100
+    const particleCount = isMobile ? 60 : 120
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -107,17 +106,12 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
     window.addEventListener('resize', onResize)
 
     let animId = 0
-    let lastFrame = 0
     const pos = geometry.attributes.position as THREE.BufferAttribute
 
     const colorA = new THREE.Color(palette.lineA)
     const colorB = new THREE.Color(palette.lineB)
 
-    const animate = (now: number) => {
-      animId = requestAnimationFrame(animate)
-      if (now - lastFrame < FRAME_INTERVAL) return
-      lastFrame = now
-
+    const renderFrame = () => {
       // Update particle positions
       for (let i = 0; i < particleCount; i++) {
         const ix = i * 3
@@ -192,6 +186,11 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
       renderer.render(scene, camera)
     }
 
+    const animate = () => {
+      animId = requestAnimationFrame(animate)
+      renderFrame()
+    }
+
     const start = () => {
       if (!animId) animId = requestAnimationFrame(animate)
     }
@@ -205,9 +204,13 @@ export default function ThreeBackground({ theme }: { theme: Theme }) {
       if (document.hidden) stop()
       else start()
     }
-    document.addEventListener('visibilitychange', onVisibility)
 
-    start()
+    if (reducedMotion) {
+      renderFrame() // one static frame, no loop
+    } else {
+      document.addEventListener('visibilitychange', onVisibility)
+      start()
+    }
 
     return () => {
       stop()

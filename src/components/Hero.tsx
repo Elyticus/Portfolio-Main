@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { ArrowRight, Download } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -6,6 +7,14 @@ const RESUME_URL =
   "https://drive.google.com/file/d/1KMkyIFdmHdqd2XWRReHLSXrRmG5I42oS/view?usp=sharing";
 
 export default function Hero() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <section
       id="home"
@@ -80,6 +89,17 @@ export default function Hero() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Scroll indicator — fades out once the user starts scrolling */}
+        <div
+          className="hidden md:flex flex-col items-center gap-2 motion-safe:animate-bounce mt-12 transition-opacity duration-500"
+          style={{ opacity: scrolled ? 0 : 1 }}
+        >
+          <span className="text-muted-foreground text-xs tracking-widest uppercase">
+            Scroll
+          </span>
+          <div className="w-px h-10 bg-linear-to-b from-primary/60 to-transparent" />
         </div>
       </div>
     </section>

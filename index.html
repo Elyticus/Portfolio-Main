@@ -22,13 +22,13 @@
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#05070f" />
     <script>
+      // Dark is the site's default look; a stored toggle choice wins.
       (function () {
         try {
-          var stored = localStorage.getItem("theme");
-          var dark = stored
-            ? stored === "dark"
-            : window.matchMedia("(prefers-color-scheme: dark)").matches;
-          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.classList.toggle(
+            "dark",
+            localStorage.getItem("theme") !== "light"
+          );
         } catch (e) {
           document.documentElement.classList.add("dark");
         }
