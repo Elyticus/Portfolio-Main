@@ -2,6 +2,8 @@
 
 Personal portfolio and digital resume of **Catalin Pirvulescu**, frontend developer.
 
+**Live site: [catalinpirvulescu.netlify.app](https://catalinpirvulescu.netlify.app/)**
+
 ![Portfolio preview](docs/preview.png)
 
 ## Features
@@ -39,5 +41,7 @@ The script visits each live project with headless Chromium, saves optimized
 960×540 WebP screenshots, regenerates the optimized profile photo and the
 `public/og.jpg` social card. Re-run it whenever a project's UI changes.
 
-> After deploying, update the `og:url` / `og:image` domain placeholder in
-> `index.html` with the real deploy URL.
+## Deployment
+
+The site deploys automatically to [Netlify](https://catalinpirvulescu.netlify.app/)
+on every push to `master`.
