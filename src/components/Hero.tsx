@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Download } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTypewriter } from "@/hooks/useTypewriter";
 
 const RESUME_URL =
   "https://drive.google.com/file/d/1KMkyIFdmHdqd2XWRReHLSXrRmG5I42oS/view?usp=sharing";
 
+const ROLES = ["Frontend Engineer", "Creative Developer"];
+
 export default function Hero() {
   const [scrolled, setScrolled] = useState(false);
+  const role = useTypewriter(ROLES);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -36,8 +40,15 @@ export default function Hero() {
               Hi, I'm <span className="text-gradient">Catalin Pirvulescu</span>
             </h1>
 
-            <p className="text-xl sm:text-2xl font-medium text-foreground/80 mb-6">
-              Frontend Developer
+            <p className="text-xl sm:text-2xl font-medium mb-6">
+              <span className="sr-only">{ROLES.join(" and ")}</span>
+              <span aria-hidden="true" className="text-gradient-shift">
+                {role}
+              </span>
+              <span
+                aria-hidden="true"
+                className="inline-block w-0.5 h-[1em] ml-1 align-[-0.15em] bg-primary motion-safe:animate-blink"
+              />
             </p>
 
             <p className="text-muted-foreground text-lg max-w-xl mx-auto md:mx-0 mb-10 leading-relaxed">
