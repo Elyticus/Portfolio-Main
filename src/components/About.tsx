@@ -57,7 +57,7 @@ export default function About() {
   const [gridRef, gridVisible] = useInView<HTMLDivElement>(0.15);
 
   return (
-    <section id="about" className="py-32 relative scroll-mt-20">
+    <section id="about" className="py-20 sm:py-24 lg:py-32 short:py-16 relative scroll-mt-20">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header + bio */}
         <div
@@ -77,7 +77,7 @@ export default function About() {
             </h2>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-4 mb-12">
+          <div className="max-w-3xl mx-auto space-y-4 mb-10 sm:mb-12">
             <p className="text-muted-foreground leading-relaxed">
               I graduated IT School and completed the Scrimba Front End
               Developer Career Path. I'm a self-taught learner with a passion
@@ -92,7 +92,7 @@ export default function About() {
           </div>
 
           {/* Highlights */}
-          <div className="grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto mb-16">
+          <div className="grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto mb-12 sm:mb-16">
             {highlights.map(({ icon: Icon, label, desc }) => (
               <div
                 key={label}
@@ -100,7 +100,7 @@ export default function About() {
               >
                 <Icon size={20} className="text-primary mb-2" />
                 <span className="text-sm font-semibold">{label}</span>
-                <span className="text-muted-foreground text-xs mt-0.5">
+                <span className="text-muted-foreground text-sm sm:text-xs mt-0.5">
                   {desc}
                 </span>
               </div>
@@ -111,7 +111,7 @@ export default function About() {
         {/* Experience + skills */}
         <div
           ref={gridRef}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-16 transition-all duration-700"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 transition-all duration-700"
           style={{
             opacity: gridVisible ? 1 : 0,
             transform: gridVisible ? "translateY(0)" : "translateY(24px)",
@@ -125,7 +125,7 @@ export default function About() {
             <ol className="relative border-l border-border pl-6 space-y-8">
               {timeline.map(({ period, title, desc }) => (
                 <li key={title} className="relative">
-                  <span className="absolute -left-[30.5px] top-1.5 size-2.5 rounded-full bg-primary" />
+                  <span className="absolute -left-[calc(1.8125rem_+_1.5px)] top-1.5 size-2.5 rounded-full bg-primary" />
                   <p className="text-xs font-medium uppercase tracking-wider text-primary mb-1">
                     {period}
                   </p>
@@ -143,7 +143,7 @@ export default function About() {
               <span className="w-4 h-px bg-primary" />
               Technical Skills
             </h3>
-            <ul className="flex flex-wrap gap-2 mb-10">
+            <ul className="flex flex-wrap gap-2 mb-8 sm:mb-10">
               {skills.map((skill) => (
                 <li
                   key={skill}
@@ -154,7 +154,7 @@ export default function About() {
               ))}
             </ul>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4">
               <a
                 href={RESUME_URL}
                 target="_blank"

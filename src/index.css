@@ -4,6 +4,8 @@
 @import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
+/* Landscape phones: wide but very short viewports */
+@custom-variant short (@media (orientation: landscape) and (max-height: 500px));
 
 @theme inline {
     --font-heading: var(--font-sans);
@@ -140,6 +142,17 @@
   html {
     @apply font-sans;
     scroll-behavior: smooth;
+  }
+  /* Scale the rem-based layout up slightly on large monitors */
+  @media (min-width: 1920px) {
+    html {
+      font-size: 106.25%;
+    }
+  }
+  @media (min-width: 2400px) {
+    html {
+      font-size: 118.75%;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     html {

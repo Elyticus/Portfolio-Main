@@ -36,7 +36,7 @@ export default function Contact() {
   const [ref, visible] = useInView<HTMLDivElement>(0.2);
 
   return (
-    <section id="contact" className="py-32 relative scroll-mt-20">
+    <section id="contact" className="py-20 sm:py-24 lg:py-32 short:py-16 relative scroll-mt-20">
       <div className="max-w-4xl mx-auto px-6 text-center" ref={ref}>
         <div
           className="transition-all duration-700"
@@ -51,19 +51,19 @@ export default function Contact() {
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
             Get in <span className="text-gradient-shift">touch</span>
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-16">
+          <p className="text-muted-foreground max-w-xl mx-auto mb-10 sm:mb-16">
             I'm currently looking for frontend opportunities. My inbox is
             always open — whether you have a role, a question, or just want to
             say hi.
           </p>
 
           {/* Contact cards */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-10 sm:mb-12">
             {contacts.map(({ icon: Icon, label, value, href }) => (
               <a
                 key={label}
                 href={href}
-                className="group flex-1 max-w-sm mx-auto sm:mx-0 w-full flex flex-col items-center gap-3 p-8 rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="group flex-1 max-w-sm mx-auto sm:mx-0 w-full flex flex-col items-center gap-3 p-6 sm:p-8 rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <span className="size-14 rounded-full flex items-center justify-center mb-1 bg-primary/10 text-primary">
                   <Icon size={24} />
@@ -71,20 +71,31 @@ export default function Contact() {
                 <span className="text-muted-foreground text-xs uppercase tracking-wider">
                   {label}
                 </span>
-                <span className="font-medium text-sm break-all">{value}</span>
+                <span className="font-medium text-sm break-words">
+                  {/* Let long emails wrap before the @ instead of mid-word */}
+                  {value.includes("@") ? (
+                    <>
+                      {value.slice(0, value.indexOf("@"))}
+                      <wbr />
+                      {value.slice(value.indexOf("@"))}
+                    </>
+                  ) : (
+                    value
+                  )}
+                </span>
               </a>
             ))}
           </div>
 
           {/* Socials */}
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {socials.map(({ icon: Icon, label, href }) => (
               <a
                 key={label}
                 href={href}
                 target="_blank"
                 rel="noreferrer"
-                className={cn(buttonVariants({ variant: "outline" }), "h-10 px-5")}
+                className={cn(buttonVariants({ variant: "outline" }), "h-11 px-5")}
               >
                 <Icon size={16} />
                 {label}

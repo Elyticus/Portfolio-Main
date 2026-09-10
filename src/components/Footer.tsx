@@ -24,13 +24,13 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border py-10">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+    <footer className="border-t border-border py-8 sm:py-10">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 text-center md:text-left">
         <span className="text-xl font-bold text-gradient tracking-wider">
           {"<Catalin />"}
         </span>
 
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           {socials.map(({ icon: Icon, href, label }) => (
             <a
               key={label}
@@ -38,7 +38,7 @@ export default function Footer() {
               target="_blank"
               rel="noreferrer"
               aria-label={label}
-              className="inline-flex items-center justify-center size-9 rounded-lg text-muted-foreground hover:text-primary transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="inline-flex items-center justify-center size-11 rounded-lg text-muted-foreground hover:text-primary transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Icon size={18} />
             </a>

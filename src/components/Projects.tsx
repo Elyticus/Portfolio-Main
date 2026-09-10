@@ -108,7 +108,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         />
       </div>
 
-      <div className="flex flex-col flex-1 p-6">
+      <div className="flex flex-col flex-1 p-5 sm:p-6">
         <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors duration-300">
           {project.title}
         </h3>
@@ -129,17 +129,17 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             href={project.github}
             target="_blank"
             rel="noreferrer"
-            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            className={cn(buttonVariants({ variant: "outline" }), "h-11 lg:h-9 px-4 flex-1 sm:flex-none")}
           >
-            <GithubIcon size={14} /> Code
+            <GithubIcon size={16} /> Code
           </a>
           <a
             href={project.live}
             target="_blank"
             rel="noreferrer"
-            className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
+            className={cn(buttonVariants({ variant: "secondary" }), "h-11 lg:h-9 px-4 flex-1 sm:flex-none")}
           >
-            <ExternalLink size={14} /> Live demo
+            <ExternalLink size={16} /> Live demo
           </a>
         </div>
       </div>
@@ -151,11 +151,11 @@ export default function Projects() {
   const [headingRef, headingVisible] = useInView<HTMLDivElement>(0.3);
 
   return (
-    <section id="projects" className="py-32 relative scroll-mt-20">
+    <section id="projects" className="py-20 sm:py-24 lg:py-32 short:py-16 relative scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6">
         <div
           ref={headingRef}
-          className="text-center mb-16 transition-all duration-700"
+          className="text-center mb-10 sm:mb-12 lg:mb-16 transition-all duration-700"
           style={{
             opacity: headingVisible ? 1 : 0,
             transform: headingVisible ? "translateY(0)" : "translateY(24px)",
@@ -173,7 +173,7 @@ export default function Projects() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {projects.map((project, i) => (
             <ProjectCard key={project.slug} project={project} index={i} />
           ))}
