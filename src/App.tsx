@@ -27,7 +27,7 @@ export default function App() {
       <div className="relative z-10">
         <Navbar theme={theme} onToggleTheme={toggle} />
         <main id="main">
-          <Hero theme={theme} />
+          <Hero />
           <Projects />
           <About />
           <Contact />
