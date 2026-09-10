@@ -16,7 +16,7 @@ Personal portfolio and digital resume of **Catalin Pirvulescu**, frontend develo
 
 ## Tech stack
 
-React 19 · TypeScript · Vite · Tailwind CSS v4 · shadcn/ui (Base UI) · three.js · Geist
+React 19 · Vite · Tailwind CSS v4 · shadcn/ui (Base UI) · three.js · Geist
 
 ## Development
 

@@ -138,7 +138,7 @@ if (existsSync(profileSrc)) {
   </style></head><body>
     <div class="badge">Available for work</div>
     <h1><span>Catalin Pirvulescu</span></h1>
-    <p>Frontend Developer — React &middot; TypeScript &middot; Modern CSS</p>
+    <p>Frontend Developer — React &middot; Modern CSS</p>
   </body></html>`);
   await page.waitForTimeout(300);
   const jpg = await page.screenshot({ type: "jpeg", quality: 88 });

@@ -10,7 +10,6 @@ const skills = [
   "HTML",
   "CSS",
   "JavaScript",
-  "TypeScript",
   "React",
   "Bootstrap",
   "Firebase",

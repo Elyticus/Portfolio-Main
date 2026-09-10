@@ -52,9 +52,9 @@ export default function Hero() {
             </p>
 
             <p className="text-muted-foreground text-lg max-w-xl mx-auto md:mx-0 mb-10 leading-relaxed">
-              I build fast, accessible web interfaces with React, TypeScript
-              and modern CSS. Recently completed the Scrimba Frontend Career
-              Path and looking for my next frontend role.
+              I build fast, accessible web interfaces with React and modern
+              CSS. Recently completed the Scrimba Frontend Career Path and
+              looking for my next frontend role.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
