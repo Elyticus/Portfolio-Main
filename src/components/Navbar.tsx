@@ -53,7 +53,7 @@ export default function Navbar({ theme, onToggleTheme }: NavbarProps) {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="#home" className="text-xl font-bold text-gradient tracking-wider rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <a href="#home" className="text-xl font-bold text-gradient-shift tracking-wider rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           {"<Catalin />"}
         </a>
 
