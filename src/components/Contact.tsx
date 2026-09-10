@@ -49,7 +49,7 @@ export default function Contact() {
             Contact
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
-            Get in touch
+            Get in <span className="text-gradient-shift">touch</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-16">
             I'm currently looking for frontend opportunities. My inbox is

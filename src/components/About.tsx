@@ -74,7 +74,7 @@ export default function About() {
               About
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-              A bit about me
+              A bit <span className="text-gradient-shift">about me</span>
             </h2>
           </div>
 

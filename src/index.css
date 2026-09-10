@@ -79,6 +79,7 @@
     --ring: oklch(0.52 0.11 170);
     --gradient-to: oklch(0.45 0.1 220);
     --gradient-accent: oklch(0.5 0.18 293);
+    --gradient-warm: oklch(0.55 0.115 75);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
@@ -116,6 +117,7 @@
     --ring: oklch(0.78 0.14 168);
     --gradient-to: oklch(0.72 0.12 210);
     --gradient-accent: oklch(0.72 0.15 293);
+    --gradient-warm: oklch(0.86 0.16 88);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
@@ -163,15 +165,16 @@
   color: transparent;
 }
 
-/* Three-tone shifting gradient — hero role, like the original Portfolio V2 */
+/* Four-tone shifting gradient (teal, blue, violet, warm yellow) — hero role and section headings */
 .text-gradient-shift {
   background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--gradient-to),
-    var(--gradient-accent)
+    90deg,
+    var(--color-primary) 0%,
+    var(--gradient-to) 30%,
+    var(--gradient-accent) 60%,
+    var(--gradient-warm) 90%
   );
-  background-size: 200% 200%;
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

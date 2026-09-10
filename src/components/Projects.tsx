@@ -165,7 +165,7 @@ export default function Projects() {
             Projects
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
-            Things I've built
+            <span className="text-gradient-shift">Things</span> I've built
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             A selection of recent work — every card links to the live site and
